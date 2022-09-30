@@ -1,10 +1,26 @@
 """Command line program for defining file attributes for a given data type/product."""
-import pdb
+
 import argparse
 import itertools
 
 import yaml
 import xarray as xr
+
+
+class store_dict(argparse.Action):
+    """An argparse action for parsing a command line argument as a dictionary.
+
+    Examples
+    --------
+    title="hello world" becomes {'title': 'hello world'}
+
+    """
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, dict())
+        for value in values:
+            key, val = value.split("=")
+            getattr(namespace, self.dest)[key] = val
 
 
 def get_template_attrs(product):
@@ -53,6 +69,7 @@ def main(args):
     template_attr_dict = get_template_attrs(args.product)     
     file_attr_dict = get_file_attrs(args.infile)
     new_attr_dict = template_attr_dict | file_attr_dict
+    new_attr_dict = new_attr_dict | args.custom_global_attrs
         
     attr_edits = ' '
     for key, value in new_attr_dict.items():
@@ -92,6 +109,14 @@ if __name__ == '__main__':
     parser.add_argument("product", type=str, choices=('qqscale',), help="product type")
     
     parser.add_argument("--outfile", type=str, default=None, help="new data file (if none infile is just modified in place)")
+    parser.add_argument(
+        "--custom_global_attrs",
+        type=str,
+        nargs="*",
+        action=store_dict,
+        default={},
+        help="""Custom global attributes (e.g. title="QQ Scaled Climate Variables, daily tmin")""",
+    )
     parser.add_argument("--del_var_attrs", type=str, nargs='*', default=[], help="variable attributes to delete")
 
     args = parser.parse_args()
