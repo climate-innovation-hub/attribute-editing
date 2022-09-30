@@ -6,7 +6,8 @@ the metadata in netCDF files it produces.
 (Default/standard metadata keys and values are defined in the YAML files in this repository.)
 
 The `define_attributes.py` script determines the correct file attributes for a given data type/product. 
-It outputs a series of `ncatted` commands that can be run to correct the metadata.
+It outputs a series of [`ncatted`](https://nco.sourceforge.net/nco.html#ncatted-netCDF-Attribute-Editor)
+commands that can be run to correct the metadata.
 
 ### Usage
  
@@ -54,7 +55,7 @@ to a file (i.e. a shell script) and then run that script.
 
 The metadata in a QQ-scaled daily minimum temperature data file can be corrected
 by running the following command.
-It applies the default global attributes, plus
+It applies the default global attributes in `global_attributes.yml`, plus
 the `--del_var_attrs` option has been used to delete the `coordinates` attribute from any variables that have it
 and `--custom_global_attrs` has been used to define a custom "title" global attribute.
 The output has been redirected to a script called `fix.sh` which can be run to execute the commands.
