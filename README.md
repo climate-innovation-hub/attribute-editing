@@ -55,13 +55,12 @@ to a file (i.e. a shell script) and then run that script.
 
 The metadata in a QQ-scaled daily minimum temperature data file can be corrected
 by running the following command.
-It applies the default global attributes in `global_attributes.yml`, plus
-the `--del_var_attrs` option has been used to delete the `coordinates` attribute from any variables that have it
-and `--custom_global_attrs` has been used to define a custom "title" global attribute.
+It applies the default global attributes in `global_attributes.yml`,
+plus the `--custom_global_attrs` option has been used to define a custom "title" global attribute.
 The output has been redirected to a script called `fix.sh` which can be run to execute the commands.
 
 ```
-/g/data/wp00/users/dbi599/miniconda3/envs/cih/bin/python /g/data/wp00/shared_code/frequency-analysis/define_attributes.py /g/data/dk7/kcn599/for_Leanne/QQ-Scaled_daily/tasmin_AUS_GFDL-ESM2M_rcp45_r1i1p1_CSIRO-QQS-AGCD-1981-2010_day_wrt_1986-2005_2036-2065.nc qqscale --del_var_attrs coordinates --custom_global_attrs title="QQ Scaled Climate Variables, daily tmin" > fix.sh
+/g/data/wp00/users/dbi599/miniconda3/envs/cih/bin/python /g/data/wp00/shared_code/frequency-analysis/define_attributes.py /g/data/dk7/kcn599/for_Leanne/QQ-Scaled_daily/tasmin_AUS_GFDL-ESM2M_rcp45_r1i1p1_CSIRO-QQS-AGCD-1981-2010_day_wrt_1986-2005_2036-2065.nc qqscale --custom_global_attrs title="QQ Scaled Climate Variables, daily tmin" > fix.sh
 ```
 
 IMPORTANT: When executed the commands in `fix.sh` will edit the existing data file.
