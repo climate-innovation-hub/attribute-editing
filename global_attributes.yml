@@ -1,0 +1,13 @@
+universal:
+  institution: "CSIRO"
+  licence: "This data is provided under commercial license. CSIRO is the owner of the data. The Recipient has requested access to the Data and CSIRO has agreed to provide access to the Data on the terms set out in the license agreement. The Data may only be used for the Recipient’s internal purposes. The Data cannot be distributed or sub-licensed to partners or other third party organisations without the expressed written consent of CSIRO. Any personal information provided with the Data will comply with the requirements of the Privacy Act 1988 (Cth)."
+  acknowledgment: "The data were created by the CSIRO Climate Innovation Hub."
+  contact: "alexander.bunday@csiro.au" 
+  standard_name_vocabulary: "CF Standard Names"
+  data_format: "netCDF4" 
+  cdm_data_type: "Grid"
+
+qqscale:
+  summary: "The QQ Scaled Climate Variables were created using a technique that reduces climate model biases by applying projected climate changes simulated by a climate model to observations. This technique produces application-ready data that is the same resolution as the observations used; typically much higher than the resolution of a GCM (e.g. 5km vs several hundred kilometres)."
+  keywords: "Climate Projections, Bias Correction, Downscaling, Physical Climate Risk, Australia"
+  code_repository: https://github.com/climate-resilient-enterprise/workflows/tree/master/qq_scale
