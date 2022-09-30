@@ -23,10 +23,10 @@ class store_dict(argparse.Action):
             getattr(namespace, self.dest)[key] = val
 
 
-def get_template_attrs(product):
+def get_template_attrs(template_file, product):
     """Get global attributes from template"""
     
-    with open('global_attributes.yml', "r") as reader:
+    with open(template_file, "r") as reader:
         attr_template = yaml.load(reader, Loader=yaml.BaseLoader)
     assert product in attr_template
     attr_dict = attr_template['universal'] | attr_template[product]
@@ -66,7 +66,7 @@ def get_file_attrs(infile):
 def main(args):
     """Run the program."""
 
-    template_attr_dict = get_template_attrs(args.product)     
+    template_attr_dict = get_template_attrs(args.template_file, args.product)     
     file_attr_dict = get_file_attrs(args.infile)
     new_attr_dict = template_attr_dict | file_attr_dict
     new_attr_dict = new_attr_dict | args.custom_global_attrs
@@ -106,6 +106,7 @@ if __name__ == '__main__':
     )     
     parser.add_argument("infile", type=str, help="data file for metadata editing")
     parser.add_argument("product", type=str, choices=('qqscale',), help="product type")
+    parser.add_argument("template_file", type=str, help="YAML file with metadata defaults")
     
     parser.add_argument("--outfile", type=str, default=None, help="new data file (if none infile is just modified in place)")
     parser.add_argument(
