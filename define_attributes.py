@@ -1,35 +1,85 @@
 """Command line program for defining file attributes for a given data type/product."""
 import pdb
 import argparse
+import itertools
 
 import yaml
 import xarray as xr
 
 
-def main(args):
-    """Run the program."""
+def get_template_attrs(product):
+    """Get global attributes from template"""
     
     with open('global_attributes.yml', "r") as reader:
-        global_attrs_template = yaml.load(reader, Loader=yaml.BaseLoader)
-    assert args.product in global_attrs_template
-    attr_dict = global_attrs_template['universal'] | global_attrs_template[args.product]
+        attr_template = yaml.load(reader, Loader=yaml.BaseLoader)
+    assert product in attr_template
+    attr_dict = attr_template['universal'] | attr_template[product]
 
-    #ds = xr.open_dataset(args.infile)
+    return attr_dict
+
+
+def get_file_attrs(infile):
+    """Get attribute information from data file."""
+    
+    attrs_from_data = {}
+    try:
+        ds = xr.open_dataset(args.infile)
+        attrs_from_data['time_coverage_start'] = ds['time'].values[0].isoformat()
+        attrs_from_data['time_coverage_end'] = ds['time'].values[-1].isoformat()
+    except:
+        ds = xr.open_dataset(args.infile, decode_times=False)
+
+    spatial_attrs = [
+        'geospatial_lat_min',
+        'geospatial_lat_max',
+        'geospatial_lon_min',
+        'geospatial_lon_max'
+    ]
+    for spatial_attr in spatial_attrs:
+        if spatial_attr in ds.attrs:
+            attrs_from_data[spatial_attr] = ds.attrs[spatial_attr]
+        else:
+            _temp, dim, mode = spatial_attr.split('_')
+            idx = 0 if mode == 'min' else -1
+            attrs_from_data[spatial_attr] = str(ds[dim].values[idx])
+    ds.close()
+    
+    return attrs_from_data
+
+
+def main(args):
+    """Run the program."""
+
+    template_attr_dict = get_template_attrs(args.product)     
+    file_attr_dict = get_file_attrs(args.infile)
+    new_attr_dict = template_attr_dict | file_attr_dict
         
     attr_edits = ' '
-    for key, value in attr_dict.items():
+    for key, value in new_attr_dict.items():
         new_attr = f"""-a {key},global,o,c,"{value}" """
         attr_edits = attr_edits + new_attr
-    
+
     clear_global_attrs = f"ncatted -h -a ,global,d,, {args.infile}"
-    add_global_attrs = f"ncatted -h {attr_edits} {args.infile}"
     if args.outfile:
-        with open(args.outfile, "w") as f:
-	        f.write(clear_global_attrs + "\n")
-	        f.write(add_global_attrs)
+        clear_global_attrs = f"{clear_global_attrs} {args.outfile}"
+        outfile = args.outfile
     else:
-	    print(clear_global_attrs)
-	    print(add_global_attrs) 
+        outfile = args.infile
+    add_global_attrs = f"ncatted -h {attr_edits} {outfile}"
+
+    print(clear_global_attrs)
+    print(add_global_attrs)
+
+    if args.del_var_attrs:
+        attr_removals = ' '
+        ds = xr.open_dataset(args.infile, decode_times=False)
+        var_list = list(ds.keys())
+        for var_name, var_attr in itertools.product(var_list, args.del_var_attrs):
+            if var_attr in ds[var_name].attrs:
+                del_attr = f"-a {var_attr},{var_name},d,, "
+                attr_removals = attr_removals + del_attr
+        remove_var_attrs = f"ncatted -h {attr_removals} {outfile}"
+        print(remove_var_attrs)
 
 
 if __name__ == '__main__':
@@ -41,7 +91,8 @@ if __name__ == '__main__':
     parser.add_argument("infile", type=str, help="data file for metadata editing")
     parser.add_argument("product", type=str, choices=('qqscale',), help="product type")
     
-    parser.add_argument("--outfile", type=str, default=None, help="output file name")
+    parser.add_argument("--outfile", type=str, default=None, help="new data file (if none infile is just modified in place)")
+    parser.add_argument("--del_var_attrs", type=str, nargs='*', default=[], help="variable attributes to delete")
 
     args = parser.parse_args()
     main(args)
