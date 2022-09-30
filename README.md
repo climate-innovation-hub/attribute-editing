@@ -53,16 +53,25 @@ to a file (i.e. a shell script) and then run that script.
 
 ### Example 1
 
-The metadata in a QQ-scaled daily minimum temperature data file can be corrected
-by running the following command.
+The metadata in a QQ-scaled daily minimum temperature data file can be corrected by running the following command.
 It applies the default global attributes in `global_attributes.yml`,
 plus the `--custom_global_attrs` option has been used to define a custom "title" global attribute.
 The output has been redirected to a script called `fix.sh` which can be run to execute the commands.
 
 ```
-/g/data/wp00/users/dbi599/miniconda3/envs/cih/bin/python /g/data/wp00/shared_code/frequency-analysis/define_attributes.py /g/data/dk7/kcn599/for_Leanne/QQ-Scaled_daily/tasmin_AUS_GFDL-ESM2M_rcp45_r1i1p1_CSIRO-QQS-AGCD-1981-2010_day_wrt_1986-2005_2036-2065.nc qqscale --custom_global_attrs title="QQ Scaled Climate Variables, daily tmin" > fix.sh
+/g/data/wp00/users/dbi599/miniconda3/envs/cih/bin/python /g/data/wp00/shared_code/frequency-analysis/define_attributes.py /g/data/dk7/kcn599/for_Leanne/QQ-Scaled_daily/tasmin_AUS_GFDL-ESM2M_rcp45_r1i1p1_CSIRO-QQS-AGCD-1981-2010_day_wrt_1986-2005_2036-2065.nc qqscale --custom_global_attrs title="QQ Scaled Climate Variables, daily tasmin" > fix.sh
 ```
 
 IMPORTANT: When executed the commands in `fix.sh` will edit the existing data file.
 If you'd rather create a new data file, use the `--outfile` option and give the name of the new file.
 
+
+### Example 2
+
+This example applies the same default global attributes and a custom title as in Example 2,
+but also uses the `--del_var_attrs` to delete a whole bunch of unneeded variable attributes
+from each of the variables in the file (there's a variable for each month).
+
+```
+/g/data/wp00/users/dbi599/miniconda3/envs/cih/bin/python /g/data/wp00/shared_code/frequency-analysis/define_attributes.py /g/data/dk7/kcn599/for_Leanne/AGCD_baseline_monthly/tasmin_Mean_agcd_v1_1981-2010-seasavg-clim_native.nc qqscale --custom_global_attrs title="QQ Scaled Climate Variables, monthly mean tasmin" --del_var_attrs analysis_version_number least_significant_digit number_of_stations_reporting frequency length_scale_for_analysis cell_methods coverage_content_type > fix.sh
+```
