@@ -64,6 +64,6 @@ The output has been redirected to a script called `fix.sh` which can be run to e
 /g/data/wp00/users/dbi599/miniconda3/envs/cih/bin/python /g/data/wp00/shared_code/frequency-analysis/define_attributes.py /g/data/dk7/kcn599/for_Leanne/QQ-Scaled_daily/tasmin_AUS_GFDL-ESM2M_rcp45_r1i1p1_CSIRO-QQS-AGCD-1981-2010_day_wrt_1986-2005_2036-2065.nc qqscale --del_var_attrs coordinates --custom_global_attrs title="QQ Scaled Climate Variables, daily tmin" > fix.sh
 ```
 
-IMPORTANT: This command will edit the existing data file.
+IMPORTANT: When executed the commands in `fix.sh` will edit the existing data file.
 If you'd rather create a new data file, use the `--outfile` option and give the name of the new file.
 
