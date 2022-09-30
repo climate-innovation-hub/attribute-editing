@@ -15,6 +15,7 @@ If you're a member of the `wp00` project on NCI
 (i.e. if you're part of the CSIRO Climate Innovation Hub),
 the easiest way to use the scripts in this directory is to use the cloned copy at `/g/data/wp00/shared_code/attribute-editing/`.
 They can be run using the Python environment at `/g/data/wp00/users/dbi599/miniconda3/envs/cih/bin/python`.
+You'll also need to run `module load nco` on NCI to get access to `ncatted`.
 
 If you'd like to run the scripts in your own Python environment,
 you'll need to make sure the `xarray` and `pyyaml` libraries are installed.
