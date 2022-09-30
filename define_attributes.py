@@ -92,9 +92,8 @@ def main(args):
         ds = xr.open_dataset(args.infile)
         var_list = list(ds.keys())
         for var_name, var_attr in itertools.product(var_list, args.del_var_attrs):
-            if var_attr in ds[var_name].attrs:
-                del_attr = f"-a {var_attr},{var_name},d,, "
-                attr_removals = attr_removals + del_attr
+            del_attr = f"-a {var_attr},{var_name},d,, "
+            attr_removals = attr_removals + del_attr
         remove_var_attrs = f"ncatted -h {attr_removals} {outfile}"
         print(remove_var_attrs)
 
