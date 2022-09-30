@@ -22,12 +22,12 @@ def get_file_attrs(infile):
     """Get attribute information from data file."""
     
     attrs_from_data = {}
+    ds = xr.open_dataset(args.infile)
     try:
-        ds = xr.open_dataset(args.infile)
         attrs_from_data['time_coverage_start'] = ds['time'].values[0].isoformat()
         attrs_from_data['time_coverage_end'] = ds['time'].values[-1].isoformat()
     except:
-        ds = xr.open_dataset(args.infile, decode_times=False)
+        pass
 
     spatial_attrs = [
         'geospatial_lat_min',
@@ -72,7 +72,7 @@ def main(args):
 
     if args.del_var_attrs:
         attr_removals = ' '
-        ds = xr.open_dataset(args.infile, decode_times=False)
+        ds = xr.open_dataset(args.infile)
         var_list = list(ds.keys())
         for var_name, var_attr in itertools.product(var_list, args.del_var_attrs):
             if var_attr in ds[var_name].attrs:
