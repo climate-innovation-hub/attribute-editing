@@ -34,7 +34,7 @@ def get_template_attrs(template_file, product):
     return attr_dict
 
 
-def get_file_attrs(infile):
+def get_file_attrs(infile, keep_list=[]):
     """Get attribute information from data file."""
     
     attrs_from_data = {}
@@ -58,6 +58,10 @@ def get_file_attrs(infile):
             _temp, dim, mode = spatial_attr.split('_')
             idx = 0 if mode == 'min' else -1
             attrs_from_data[spatial_attr] = str(ds[dim].values[idx])
+
+    for keep_attr in keep_list:
+        attrs_from_data[keep_attr] = ds.attrs[keep_attr]
+        
     ds.close()
     
     return attrs_from_data
@@ -67,7 +71,7 @@ def main(args):
     """Run the program."""
 
     template_attr_dict = get_template_attrs(args.template_file, args.product)     
-    file_attr_dict = get_file_attrs(args.infile)
+    file_attr_dict = get_file_attrs(args.infile, keep_list=args.keep_attrs)
     new_attr_dict = template_attr_dict | file_attr_dict
     new_attr_dict = new_attr_dict | args.custom_global_attrs
         
@@ -108,7 +112,19 @@ if __name__ == '__main__':
     parser.add_argument("product", type=str, choices=('qqscale', 'agcd'), help="product type")
     parser.add_argument("template_file", type=str, help="YAML file with metadata defaults")
     
-    parser.add_argument("--outfile", type=str, default=None, help="new data file (if none infile is just modified in place)")
+    parser.add_argument(
+        "--outfile",
+        type=str,
+        default=None,
+        help="new data file (if none infile is just modified in place)"
+    )
+    parser.add_argument(
+        "--keep_attrs",
+        type=str,
+        nargs="*",
+        default=[],
+        help="Global attributes to keep from infile",
+    )
     parser.add_argument(
         "--custom_global_attrs",
         type=str,

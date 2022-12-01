@@ -27,20 +27,22 @@ $ /g/data/wp00/users/dbi599/miniconda3/envs/cih/bin/python /g/data/wp00/shared_c
 ```
 
 ```
-usage: define_attributes.py [-h] [--outfile OUTFILE] [--custom_global_attrs [CUSTOM_GLOBAL_ATTRS ...]]
-                            [--del_var_attrs [DEL_VAR_ATTRS ...]]
-                            infile {qqscale} template_file
+usage: define_attributes.py [-h] [--outfile OUTFILE] [--keep_attrs [KEEP_ATTRS ...]]
+                            [--custom_global_attrs [CUSTOM_GLOBAL_ATTRS ...]] [--del_var_attrs [DEL_VAR_ATTRS ...]]
+                            infile {qqscale,agcd} template_file
 
 Command line program for defining file attributes for a given data type/product.
 
 positional arguments:
   infile                data file for metadata editing
-  {qqscale}             product type
+  {qqscale,agcd}        product type
   template_file         YAML file with metadata defaults
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   --outfile OUTFILE     new data file (if none infile is just modified in place)
+  --keep_attrs [KEEP_ATTRS ...]
+                        Global attributes to keep from infile
   --custom_global_attrs [CUSTOM_GLOBAL_ATTRS ...]
                         Custom global attributes (e.g. title="QQ Scaled Climate Variables, daily tmin")
   --del_var_attrs [DEL_VAR_ATTRS ...]
@@ -60,8 +62,8 @@ It applies the default global attributes in `global_attributes.yml`,
 plus the `--custom_global_attrs` option has been used to define a custom "title" global attribute.
 The output has been redirected to a script called `fix.sh` which can be run to execute the commands.
 
-```
-/g/data/wp00/users/dbi599/miniconda3/envs/cih/bin/python /g/data/wp00/shared_code/attribute-editing/define_attributes.py /g/data/dk7/kcn599/for_Leanne/QQ-Scaled_daily/tasmin_AUS_GFDL-ESM2M_rcp45_r1i1p1_CSIRO-QQS-AGCD-1981-2010_day_wrt_1986-2005_2036-2065.nc qqscale /g/data/wp00/shared_code/attribute-editing/global_attributes.yml --custom_global_attrs title="QQ Scaled Climate Variables, daily tasmin" > fix.sh
+```bash
+$ /g/data/wp00/users/dbi599/miniconda3/envs/cih/bin/python /g/data/wp00/shared_code/attribute-editing/define_attributes.py /g/data/dk7/kcn599/for_Leanne/QQ-Scaled_daily/tasmin_AUS_GFDL-ESM2M_rcp45_r1i1p1_CSIRO-QQS-AGCD-1981-2010_day_wrt_1986-2005_2036-2065.nc qqscale /g/data/wp00/shared_code/attribute-editing/global_attributes.yml --custom_global_attrs title="QQ Scaled Climate Variables, daily tasmin" > fix.sh
 ```
 
 IMPORTANT: When executed the commands in `fix.sh` will edit the existing data file.
@@ -74,6 +76,15 @@ This example applies the same default global attributes and a custom title as in
 but also uses the `--del_var_attrs` to delete a whole bunch of unneeded variable attributes
 from each of the variables in the file (there's a variable for each month).
 
+```bash
+$ /g/data/wp00/users/dbi599/miniconda3/envs/cih/bin/python /g/data/wp00/shared_code/attribute-editing/define_attributes.py /g/data/dk7/kcn599/for_Leanne/AGCD_baseline_monthly/tasmin_Mean_agcd_v1_1981-2010-seasavg-clim_native.nc qqscale /g/data/wp00/shared_code/attribute-editing/global_attributes.yml --custom_global_attrs title="QQ Scaled Climate Variables, monthly mean tasmin" --del_var_attrs analysis_version_number least_significant_digit number_of_stations_reporting frequency length_scale_for_analysis cell_methods coverage_content_type > fix.sh
 ```
-/g/data/wp00/users/dbi599/miniconda3/envs/cih/bin/python /g/data/wp00/shared_code/attribute-editing/define_attributes.py /g/data/dk7/kcn599/for_Leanne/AGCD_baseline_monthly/tasmin_Mean_agcd_v1_1981-2010-seasavg-clim_native.nc qqscale /g/data/wp00/shared_code/attribute-editing/global_attributes.yml --custom_global_attrs title="QQ Scaled Climate Variables, monthly mean tasmin" --del_var_attrs analysis_version_number least_significant_digit number_of_stations_reporting frequency length_scale_for_analysis cell_methods coverage_content_type > fix.sh
+
+### Example 3
+
+This example uses the `--keep_attrs` option to keep some of the attributes from the input data file
+(in this case a processed AGCD data file).
+
+```bash
+$ /g/data/wp00/users/dbi599/miniconda3/envs/cih/bin/python /g/data/wp00/shared_code/attribute-editing/define_attributes.py tmin_AGCD_processed.nc agcd global_attributes.yml --keep_attrs keywords summary --del_var_attrs analysis_time length_scale_for_analysis frequency source number_of_stations_reporting cell_methods least_significant_digit analysis_version_number > fix.sh
 ```
