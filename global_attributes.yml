@@ -13,3 +13,8 @@ qqscale:
   code_repository: https://github.com/climate-innovation-hub/workflows/tree/master/qq_scale
   source: "Data is created from AGCD and CMIP5 data"
   acknowledgement: "The data were created by the CSIRO Climate Innovation Hub with the assistance of resources from the National Computational Infrastructure (NCI Australia), an NCRIS enabled capability supported by the Australian Government. The data contain modified information from the Australian Government, Bureau of Meteorology and the CMIP5 multi-model dataset. The World Climate Research Programme’s Working Group on Coupled Modelling which is responsible for CMIP and climate modelling groups around the world make model output available to it. For CMIP the U.S. Department of Energy’s Program for Climate Model Diagnosis and Intercomparison provides coordinating support and led development of software infrastructure in partnership with the Global Organisation for Earth System Science Portals." 
+
+agcd:
+  summary: "These data were derived from the Australian Gridded Climate Data (AGCD) dataset"
+  source: "Australian Gridded Climate Data (AGCD)"
+  acknowledgement: "The data were created by the CSIRO Climate Innovation Hub with the assistance of resources from the National Computational Infrastructure (NCI Australia), an NCRIS enabled capability supported by the Australian Government. The data contain modified information from the Australian Government, Bureau of Meteorology." 
