@@ -105,7 +105,7 @@ if __name__ == '__main__':
         formatter_class=argparse.RawDescriptionHelpFormatter
     )     
     parser.add_argument("infile", type=str, help="data file for metadata editing")
-    parser.add_argument("product", type=str, choices=('qqscale',), help="product type")
+    parser.add_argument("product", type=str, choices=('qqscale', 'agcd'), help="product type")
     parser.add_argument("template_file", type=str, help="YAML file with metadata defaults")
     
     parser.add_argument("--outfile", type=str, default=None, help="new data file (if none infile is just modified in place)")
